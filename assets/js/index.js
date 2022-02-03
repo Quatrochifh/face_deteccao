@@ -18,11 +18,11 @@ const startVideo = () => {
 }
 
 const loadLabels = () => {
-  const labels = ['fulano'] //nome da pasta entre aspas (pasta da label)
+  const labels = ['AnaLuiza','Lucas', 'Julia', 'Israel','Fabio', 'LucasProfessor', 'SauloProfessor', 'PriscilaProfessora', 'PauloProfessor'] //nome da pasta entre aspas (pasta da label)
   return Promise.all(labels.map(async label => {
     const descriptions = []
-    for (let i = 1; i <= 5; i++) {
-        const img = await faceapi.fetchImage(`/assets/lib/face-api/labels/${label}/${i}.jpg`)//pedindo pra api buscar uma imagem e passando aonde ela vai achar essa imagem
+    for (let i = 1; i <= 3; i++) {
+        const img = await faceapi.fetchImage(`/assets/lib/face-api/labels/${label}/${i}.jpeg`)//pedindo pra api buscar uma imagem e passando aonde ela vai achar essa imagem
       const detections = await faceapi
         .detectSingleFace(img)
           .withFaceLandmarks()
@@ -33,13 +33,13 @@ const loadLabels = () => {
   }))
 }
 
-  Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('/assets/lib/face-api/models'),
-  faceapi.nets.faceLandmark68Net.loadFromUri('/assets/lib/face-api/models'),
-  faceapi.nets.faceRecognitionNet.loadFromUri('/assets/lib/face-api/models'),
-  faceapi.nets.faceExpressionNet.loadFromUri('/assets/lib/face-api/models'),
-  faceapi.nets.ageGenderNet.loadFromUri('/assets/lib/face-api/models'),
-  faceapi.nets.ssdMobilenetv1.loadFromUri('/assets/lib/face-api/models')
+  Promise.all([ //redes neurais:
+  faceapi.nets.tinyFaceDetector.loadFromUri('/assets/lib/face-api/models'), //detectar rostos (quadrado)
+  faceapi.nets.faceLandmark68Net.loadFromUri('/assets/lib/face-api/models'), //desenhar os traços no rosto
+  faceapi.nets.faceRecognitionNet.loadFromUri('/assets/lib/face-api/models'), //reconhecimento do rosto (nome)
+  faceapi.nets.faceExpressionNet.loadFromUri('/assets/lib/face-api/models'), //detectar expressões faciais (emoções)
+  faceapi.nets.ageGenderNet.loadFromUri('/assets/lib/face-api/models'), //detectar idade e gênero
+  faceapi.nets.ssdMobilenetv1.loadFromUri('/assets/lib/face-api/models') //usada internalmente para detectar o rosto
   ]).then(startVideo)
 
 
@@ -76,7 +76,7 @@ const loadLabels = () => {
            resizedDetections.forEach(detection => {
              const {age, gender, genderProbability} = detection
              new faceapi.draw.DrawTextField([
-               `achamos que vc tem ${parseInt(age, 10)} anos`,
+               `achamos que você tem ${parseInt(age, 10)} anos`,
               //  `${gender} (${genderProbability})`
               ], detection.detection.box.topRight).draw(canvas)
             })
@@ -84,7 +84,7 @@ const loadLabels = () => {
               const box = resizedDetections[index].detection.box
               const { label, distance } = result
               new faceapi.draw.DrawTextField([
-                `${label} (${parseInt(distance * 100, 10)})`
+                `${label} (${parseInt(distance * 100, 10)}% de acerto)`
               ], box.bottomRight).draw(canvas) 
             })
       }, 100)

@@ -17,9 +17,12 @@ body{
 
 canvas{
     position: absolute;
+    top: 0.5px;
 }
 
+
 .neon-button {
+    margin-top: 45px;
     background: transparent;
     margin-bottom: 20px;
     display: inline-block;
